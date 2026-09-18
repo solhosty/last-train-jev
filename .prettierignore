@@ -1,0 +1,6 @@
+node_modules/
+dist/
+artifacts/
+.agents/
+package-lock.json
+skills-lock.json
