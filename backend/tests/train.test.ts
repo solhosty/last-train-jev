@@ -7,8 +7,8 @@ import {
   type TrainAnswers,
   type Link,
   type TrainIntent,
-} from '../src/train-game';
-import { validateTrain, trainQuestions } from '../server/train-judge';
+} from '@last-train/shared';
+import { validateTrain, trainQuestions } from '../train-judge';
 function a(intent: TrainIntent, connection: Link = 'none', supported = 1): TrainAnswers {
   return {
     intent: {

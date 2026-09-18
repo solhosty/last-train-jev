@@ -1,9 +1,11 @@
 import express, { type ErrorRequestHandler } from 'express';
-import { resolve } from 'node:path';
-import { hotelRouter } from './hotel';
+import { fileURLToPath } from 'node:url';
+
 import { trainRouter } from './train';
 import { rateLimit, WindowLimiter } from './rate-limit';
 import type { ServerConfig } from './config';
+
+const frontendRoot = fileURLToPath(new URL('../frontend/', import.meta.url));
 
 export async function createApp(config: ServerConfig) {
   const app = express();
@@ -34,20 +36,26 @@ export async function createApp(config: ServerConfig) {
   app.use('/api', rateLimit(new WindowLimiter(config.apiRequestsPerWindow, 10 * 60_000)));
   app.use(express.json({ limit: '8kb' }));
   app.post(
-    ['/api/act', '/api/train/act'],
+    '/api/train/act',
     rateLimit(new WindowLimiter(config.modelRequestsPerWindow, 10 * 60_000)),
     rateLimit(new WindowLimiter(config.globalModelRequestsPerHour, 60 * 60_000), 'global'),
   );
   app.use('/api/train', trainRouter);
-  app.use('/api', hotelRouter);
   app.use('/api', (_req, res) => res.status(404).json({ error: 'Unknown API route.' }));
 
   if (config.production) {
-    app.use(express.static(resolve('dist')));
-    app.get(['/', '/hotel'], (_req, res) => res.sendFile(resolve('dist/index.html')));
+    app.use(express.static(fileURLToPath(new URL('../frontend/dist/', import.meta.url))));
+    app.get('/', (_req, res) =>
+      res.sendFile(fileURLToPath(new URL('../frontend/dist/index.html', import.meta.url))),
+    );
   } else {
     const { createServer } = await import('vite');
-    const vite = await createServer({ server: { middlewareMode: true }, appType: 'spa' });
+    const vite = await createServer({
+      root: frontendRoot,
+      configFile: `${frontendRoot}/vite.config.ts`,
+      server: { middlewareMode: true },
+      appType: 'mpa',
+    });
     app.use(vite.middlewares);
   }
 

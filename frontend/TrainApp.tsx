@@ -13,7 +13,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import TrainCarriage from './TrainCarriage';
-import { trainObjects, type Link } from './train-game';
+import { trainObjects, type Link } from '@last-train/shared';
 import { useInvestigation } from './train/useInvestigation';
 import { CasePanel } from './train/CasePanel';
 import './train.css';

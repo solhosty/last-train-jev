@@ -8,18 +8,16 @@ Your passport disappeared during a blackout. Investigate three passengers, conne
 
 ## Run locally
 
-Requires Node.js 22.16 or newer. CI and the container use Node.js 24.
+Requires Node.js 22.16 or newer and pnpm 11.22.0. CI and the container use Node.js 24. Enable pnpm with `corepack enable` (or install the version pinned in `package.json`).
 
 ```sh
-npm ci
+pnpm install --frozen-lockfile
 cp .env.example .env
 # Add TYPESAFE_API_KEY to .env.
-npm run dev
+pnpm dev
 ```
 
 Open [localhost:4317](http://127.0.0.1:4317). Restart the server after changing environment variables. Without a key, you can inspect the carriage, but live deductions are unavailable. Failed requests never fall back to fabricated model results.
-
-The earlier [Hotel Elsewhere demo](docs/hotel-elsewhere.md) remains available at `/hotel`.
 
 ## What Jev does
 
@@ -36,10 +34,10 @@ This is **one fixed mystery with flexible natural-language deductions**, not an 
 ## Development
 
 ```sh
-npm run format           # Format project files
-npm run check            # Formatting, TypeScript, production build, unit tests
-npm run test:production  # HTTP smoke test against the built app; no provider calls
-npm run test:live        # Optional: nine paid Jev actions against the running local server
+pnpm format           # Format project files
+pnpm check            # Formatting, TypeScript, production build, unit tests
+pnpm test:production  # HTTP smoke test against the built app; no provider calls
+pnpm test:live        # Optional: nine paid Jev actions against the running local server
 ```
 
 `test:production` requires a completed build. `test:live` requires a running server with a configured key; it saves its results in ignored `artifacts/`. CI does not require a TypeSafe key.
@@ -50,13 +48,13 @@ This application needs a persistent **Node.js server**. GitHub Pages and other s
 
 For a Node host:
 
-- Install: `npm ci`
-- Build: `npm run build`
-- Start: `npm start`
+- Install: `pnpm install --frozen-lockfile`
+- Build: `pnpm build`
+- Start: `pnpm start`
 - Health endpoint: `/api/health`
 - Secret: `TYPESAFE_API_KEY`, configured in the host's secret manager
 
-Production defaults to `HOST=0.0.0.0` and respects the host's `PORT`. If the platform removes development dependencies after building, `tsx` remains available as a production dependency. Deploy the source directories as well as `dist/`, or use the container below.
+Production defaults to `HOST=0.0.0.0` and respects the host's `PORT`. If the platform removes development dependencies after building, `tsx` remains available as a production dependency. Deploy the source directories as well as `frontend/dist/`, or use the container below.
 
 ```sh
 docker build -t last-train-jev .
@@ -67,17 +65,17 @@ The container runs as a non-root user. `.env`, recordings, dependencies, and loc
 
 ## Project layout
 
-- `src/train-game.ts` — typed story facts and deterministic state transitions
-- `src/TrainApp.tsx` — investigation screen
-- `src/train/` — session hook and case-panel component
-- `src/TrainCarriage.tsx` — editable pixel-art SVG
-- `server/train.ts` — session and gameplay routes
-- `server/train-judge.ts` — Jev questions, provider request, response validation
-- `server/app.ts` — HTTP middleware and route composition
-- `server/config.ts`, `server/rate-limit.ts` — hosting settings and request budgets
-- `tests/`, `scripts/production-smoke.ts` — game, validation, configuration, and HTTP checks
+A pnpm workspace with `frontend/` for React, `backend/` for Express and its tests, and `shared/` for the game contract used by both. Run all commands from the repository root. Each workspace owns its dependencies; no root `src/` directory is needed.
 
-The original hotel uses `src/App.tsx`, `src/game.ts`, `src/PixelRoom.tsx`, and `server/hotel.ts`.
+- `shared/train-game.ts` — typed story facts and deterministic state transitions
+- `frontend/TrainApp.tsx` — investigation screen
+- `frontend/train/` — session hook and case-panel component
+- `frontend/TrainCarriage.tsx` — editable pixel-art SVG
+- `backend/train.ts` — session and gameplay routes
+- `backend/train-judge.ts` — Jev questions, provider request, response validation
+- `backend/app.ts` — HTTP middleware and route composition
+- `backend/config.ts`, `backend/rate-limit.ts` — hosting settings and request budgets
+- `backend/tests/` — game, validation, configuration, and HTTP checks
 
 ## Scope and limitations
 

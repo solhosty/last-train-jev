@@ -1,0 +1,8 @@
+packages:
+  - frontend
+  - backend
+  - shared
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - prettier@3.9.8

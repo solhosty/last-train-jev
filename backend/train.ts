@@ -8,7 +8,7 @@ import {
   applyTrain,
   type TrainState,
   type TrainTrace,
-} from '../src/train-game';
+} from '@last-train/shared';
 export const trainRouter = Router();
 const sessions = new Map<
   string,

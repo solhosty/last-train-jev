@@ -1,4 +1,4 @@
-import { trainObjects, type TrainTarget, type TrainState } from './train-game';
+import { trainObjects, type TrainTarget, type TrainState } from '@last-train/shared';
 const spots: { id: TrainTarget; x: number; y: number; label: string }[] = [
   { id: 'pianist', x: 111, y: 79, label: 'MARA · PIANIST' },
   { id: 'courier', x: 284, y: 79, label: 'ELI · COURIER' },

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { newTrain, type TrainResponse, type TrainTarget } from '../train-game';
+import { newTrain, type TrainResponse, type TrainTarget } from '@last-train/shared';
 
 const SESSION_KEY = 'last-train-session';
 

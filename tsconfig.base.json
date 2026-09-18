@@ -10,9 +10,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "noEmit": true,
-    "types": ["node"],
     "noUnusedLocals": true,
     "noUnusedParameters": true
-  },
-  "include": ["src", "server", "tests", "vite.config.ts", "scripts"]
+  }
 }

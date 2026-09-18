@@ -2,9 +2,9 @@
 
 ## Runtime
 
-Build with `npm ci && npm run build`, then start with `npm start`. The application serves the compiled React app and the API from the same origin. Deploy one Node.js process, or use the supplied multi-stage Dockerfile.
+Build with `pnpm install --frozen-lockfile && pnpm build`, then start with `pnpm start`. The application serves the compiled React app and the API from the same origin. Deploy one Node.js process, or use the supplied multi-stage Dockerfile.
 
-`npm start` needs `server/`, the shared modules in `src/`, `dist/`, and production dependencies. The container copies these explicitly and runs as the non-root `node` user. No key is needed during the build.
+`pnpm start` needs `backend/`, the shared modules in `shared/`, `frontend/dist/`, and production dependencies. The container copies these explicitly and runs as the non-root `node` user. No key is needed during the build.
 
 ## Environment
 
@@ -15,10 +15,10 @@ Use `.env.example` as the configuration reference. Supply `TYPESAFE_API_KEY` thr
 - `HOST`: `127.0.0.1` in development, `0.0.0.0` in production.
 - `TRUST_PROXY_HOPS`: `0` by default. Set it only when the platform has a known, fixed number of trusted reverse proxies. Incorrect trust settings allow forged client addresses or accidentally group all visitors under one address.
 - `API_RATE_LIMIT`: 120 API attempts per client per ten-minute window.
-- `MODEL_RATE_LIMIT`: 30 action-endpoint attempts per client per ten-minute window, shared by both games.
-- `MODEL_GLOBAL_LIMIT`: 300 action-endpoint attempts per server per hour, shared by both games.
+- `MODEL_RATE_LIMIT`: 30 action-endpoint attempts per client per ten-minute window, for the train game.
+- `MODEL_GLOBAL_LIMIT`: 300 action-endpoint attempts per server per hour, for the train game.
 
-Limits count attempts, including invalid actions. Responses include HTTP 429 and `Retry-After` when exhausted. `/api/health` does not consume the gameplay budget. Both games enforce optimistic session revisions and one action in flight per session.
+Limits count attempts, including invalid actions. Responses include HTTP 429 and `Retry-After` when exhausted. `/api/health` does not consume the gameplay budget. The game enforces optimistic session revisions and one action in flight per session.
 
 ## Operational boundaries
 
@@ -31,10 +31,10 @@ Configure a TypeSafe spending limit or upstream access control for an unrestrict
 ## Verification
 
 ```sh
-npm run check
-npm run test:production
+pnpm check
+pnpm test:production
 ```
 
 The production smoke check starts an isolated server on an ephemeral loopback port, deliberately removes the TypeSafe key from its own process, and verifies page routes, API errors, session isolation, stale revisions, body limits, origin checks, and rate limiting. It makes no model calls.
 
-The optional `npm run test:live` checks real deductions through the running development server. It incurs TypeSafe usage. Never add live credentials to CI just to run the default checks.
+The optional `pnpm test:live` checks real deductions through the running development server. It incurs TypeSafe usage. Never add live credentials to CI just to run the default checks.

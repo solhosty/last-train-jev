@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readConfig } from '../server/config';
-import { WindowLimiter } from '../server/rate-limit';
+import { readConfig } from '../config';
+import { WindowLimiter } from '../rate-limit';
 
 test('hosting defaults bind production publicly and keep development local', () => {
   assert.equal(readConfig({}).host, '127.0.0.1');

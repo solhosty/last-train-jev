@@ -1,0 +1,25 @@
+{
+  "name": "@last-train/backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --env-file-if-exists=../.env --import tsx index.ts",
+    "start": "NODE_ENV=production node --env-file-if-exists=../.env --import tsx index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test tests/*.test.ts",
+    "test:production": "node --import tsx tests/production-smoke.ts",
+    "test:live": "node --import tsx tests/train-live.ts"
+  },
+  "dependencies": {
+    "@last-train/shared": "workspace:*",
+    "express": "^5.1.0",
+    "tsx": "^4.23.13"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.1.0"
+  }
+}

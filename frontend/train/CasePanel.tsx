@@ -1,5 +1,5 @@
 import { Link2, Check, LockKeyhole, Search, Sparkles, ArrowUpRight } from 'lucide-react';
-import type { Link, TrainState, TrainTrace } from '../train-game';
+import type { Link, TrainState, TrainTrace } from '@last-train/shared';
 
 const linkNames: Record<Link, string> = {
   private_detail: 'Private knowledge → passport access',

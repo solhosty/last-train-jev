@@ -1,11 +1,11 @@
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import type { AddressInfo } from 'node:net';
-import { readConfig } from '../server/config';
+import { readConfig } from '../config';
 
 // This check must never spend provider credits, even if run in an authenticated shell.
 delete process.env.TYPESAFE_API_KEY;
-const { createApp } = await import('../server/app');
+const { createApp } = await import('../app');
 const config = readConfig({ NODE_ENV: 'production', MODEL_RATE_LIMIT: '2' });
 const app = await createApp(config);
 const server = app.listen(0, '127.0.0.1');
@@ -21,12 +21,15 @@ async function post(path: string, body: unknown, headers: Record<string, string>
 }
 
 try {
-  for (const path of ['/', '/hotel']) {
+  for (const path of ['/']) {
     const response = await fetch(base + path);
     assert.equal(response.status, 200, path);
     assert.match(await response.text(), /<div id="root"><\/div>/);
     assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
   }
+  assert.equal((await fetch(base + '/hotel')).status, 404);
+  assert.equal((await post('/api/inspect', {})).status, 404);
+  assert.equal((await post('/api/act', {})).status, 404);
   assert.equal((await fetch(base + '/api/health')).status, 200);
   assert.equal((await fetch(base + '/api/unknown')).status, 404);
   assert.equal(
@@ -62,8 +65,8 @@ try {
   assert.equal(resumed.state.moves, 0, 'Failed/limited actions must not change state.');
   assert.equal(
     (await post('/api/session', {})).status,
-    200,
-    'The original hotel remains available.',
+    404,
+    'Removed legacy API endpoints must stay unavailable.',
   );
   console.log(
     'Production smoke passed: routes, input limits, origin checks, sessions, revisions, and rate limiting. No provider requests.',

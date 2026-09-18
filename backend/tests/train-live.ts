@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
-import type { TrainResponse, TrainTarget } from '../src/train-game';
+import type { TrainResponse, TrainTarget } from '@last-train/shared';
 const evidence: unknown[] = [];
 async function post(path: string, body: unknown) {
   const r = await fetch('http://127.0.0.1:4317/api/train/' + path, {
@@ -65,5 +65,8 @@ await act(
 assert.equal(v.state.recovered, true);
 await act('conductor', 'Here is my recovered passport. Please unlock the carriage so I can leave.');
 assert.equal(v.state.escaped, true);
-await writeFile('artifacts/train-live-verification.json', JSON.stringify(evidence, null, 2));
+await writeFile(
+  new URL('../../artifacts/train-live-verification.json', import.meta.url),
+  JSON.stringify(evidence, null, 2),
+);
 console.log('PASS: nine live actions, evidence gates, innocent lies, and escape.');

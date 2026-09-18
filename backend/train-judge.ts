@@ -3,7 +3,7 @@ import {
   type TrainState,
   type TrainTarget,
   type TrainAnswers,
-} from '../src/train-game';
+} from '@last-train/shared';
 export const trainQuestions = {
   intent: {
     type: 'choice',
